@@ -106,7 +106,7 @@ foreach($dateArray as $key => $date)
 		$time                     = $LunarCalendarHolidayList["Time"];
 		$time                     = explode('月',$time);
 		//农历转数字
-		$y = date('Y');
+		$y = date('Y',strtotime($date));
 		//除夕是上一年的阴历日期
 		if($LunarCalendarHolidayList["Name"] == '除夕')
 		{

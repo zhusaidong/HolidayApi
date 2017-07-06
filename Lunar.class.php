@@ -33,11 +33,7 @@ class Lunar
 		$between  = $this->getDaysBetweenLunar($year,$month,$date);
 		$res      = mktime(0,0,0,$yearData[1],$yearData[2],$year);
 		$res      = date('Y-m-d',$res + $between * 24 * 60 * 60);
-		$day      = explode('-',$res);
-		$year     = $day[0];
-		$month    = $day[1];
-		$day      = $day[2];
-		return array($year,$month,$day);
+		return explode('-',$res);
 	}
 	/**
 	* 判断是否是闰年
@@ -165,6 +161,8 @@ class Lunar
 		{
 			$res += $yearMonth[$i - 1];
 		}
+		//fix bug by zhusaidong:如果有闰月则加上闰月天数
+		$month == 12 and count($yearMonth) == 13 and $res += $yearMonth[12];
 		$res += $date - 1;
 		return $res;
 	}
