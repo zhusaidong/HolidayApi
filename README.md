@@ -6,7 +6,7 @@
 
 * demo
 
-<a href="http://holiday.zhusaidong.cn/">DEMO</a>
+<a target="_blank" href="http://holiday.zhusaidong.cn/">DEMO</a>
 
 * 返回json
 
