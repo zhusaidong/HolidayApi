@@ -2,7 +2,11 @@
 节假日api
 
 
-> 运行index.html 或者 api.php?date=2017-01-01
+> 运行index.php
+
+* demo
+
+<a target="_blank" href="http://holiday.zhusaidong.cn/">DEMO</a>
 
 * 返回json
 

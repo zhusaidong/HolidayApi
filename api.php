@@ -19,7 +19,12 @@ require_once("./config.php");
 require_once("./function.php");
 require_once("./Lunar.class.php");
 
-!isset($_GET['date']) and exit("输入日期");
+!isset($_GET['date']) and exit(json_encode([
+	'code'=>-1,
+	'info'=>'输入日期',
+	'describe'=>[],
+],JSON_UNESCAPED_UNICODE));
+
 $_GET['date'] == "" and $_GET['date'] = date('Y-m-d',time());
 
 $date      = $_GET['date'];
