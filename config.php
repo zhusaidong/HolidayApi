@@ -432,7 +432,7 @@ $GregorianCalendarHoliday = array(
 		"EnglishName"	=> "National Day",
 		"IsNotWork"		=> NotWork,
 		"Start"			=> 0,
-		"End"			=> 7,
+		"End"			=> 6,
 	),
 	array(
 		"Time"			=> "10月1日",
