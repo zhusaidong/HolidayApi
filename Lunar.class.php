@@ -155,14 +155,21 @@ class Lunar
 	*/
 	function getDaysBetweenLunar($year,$month,$date)
 	{
+		$yearData = $this->lunarInfo[$year - $this->MIN_YEAR];
+		$leapMonth = $yearData[0];
+		//fix bug (issues 3) by zhusaidong:如果闰月在搜索时间之前则要再加一个月的天数
+		//这个修复同时修复了(issues 1)的bug,故，(issues 1)的修复代码已注释
+		$leapMonth > 0 and $leapMonth <= $month and $month++;
+		
 		$yearMonth = $this->getLunarMonths($year);
 		$res       = 0;
 		for($i = 1;$i < $month;$i++)
 		{
 			$res += $yearMonth[$i - 1];
 		}
-		//fix bug by zhusaidong:如果有闰月则加上闰月天数
-		$month == 12 and count($yearMonth) == 13 and $res += $yearMonth[12];
+		//fix bug (issues 1) by zhusaidong:如果有闰月则加上闰月天数
+		//该bug被(issues 3)修复，故，已注释
+		//$month == 12 and count($yearMonth) == 13 and $res += $yearMonth[12];
 		$res += $date - 1;
 		return $res;
 	}
