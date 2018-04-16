@@ -11,7 +11,7 @@
 * )
 * 总放假天数:|Start|+|End|+1
 * 
-* @author Zsdroid [635925926@qq.com]
+* @author zhusaidong [zhusaidong@gmail.com]
 * @version 0.2.0.0
 */
 const NotWork = 1;

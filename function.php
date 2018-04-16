@@ -1,11 +1,8 @@
 <?php
 /**
-* 
-* @author Zsdroid [635925926@qq.com]
-* @package com.zsdroid
-* @since 
-* @access public
-* @version 0.1.0.0
+* function
+* @author zhusaidong [zhusaidong@gmail.com]
+* @version 0.2.0.0
 */
 /**
 * 本月第几天

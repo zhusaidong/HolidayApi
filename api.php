@@ -8,11 +8,8 @@
 * 修正返回格式
 * 节假日配置
 * 
-* @author Zsdroid [635925926@qq.com]
-* @package com.zsdroid
-* @since
-* @access public
-* @version 0.1.0.0
+* @author zhusaidong [zhusaidong@gmail.com]
+* @version 0.2.0.0
 */
 date_default_timezone_set('Asia/Shanghai');
 require_once("./config.php");
@@ -33,8 +30,14 @@ $lunar  = new Lunar();
 $return = [];
 foreach(explode(',',$dates) as $key => $date)
 {
+	//不正确的日期格式
+	if(($time = strtotime($date)) === FALSE)
+	{
+		exit('不正确的日期格式:'.$date);
+	}
+	
 	$oldDate = $date;
-	$date    = date('Y-m-d',strtotime($date));
+	$date    = date('Y-m-d',$time);
 	//返回的格式
 	$return[$key]['date'] = $date;
 	//工作日
