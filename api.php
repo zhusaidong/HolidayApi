@@ -25,12 +25,13 @@ require_once("./Lunar.class.php");
 	'describe'=>[],
 ],JSON_UNESCAPED_UNICODE));
 
-$_GET['date'] == "" and $_GET['date'] = date('Y-m-d',time());
+$dates = $_GET['date'];
+$dates == "" and $dates = date('Y-m-d',time());
 
-$date      = $_GET['date'];
-$dateArray = explode(',',$date);
-$return    = [];
-foreach($dateArray as $key => $date)
+$lunar  = new Lunar();
+
+$return = [];
+foreach(explode(',',$dates) as $key => $date)
 {
 	$oldDate = $date;
 	$date    = date('Y-m-d',strtotime($date));
@@ -41,12 +42,11 @@ foreach($dateArray as $key => $date)
 	$return[$key]['info'] = '工作日';
 	$return[$key]['describe'] = ['Name'=>'周一至周五'];
 	//判断是否为阳历节假日
-	for($i = 0; $i < count($GregorianCalendarHoliday); $i++)
+	foreach($GregorianCalendarHoliday as $GregorianCalendarHolidayList)
 	{
-		$GregorianCalendarHolidayList = $GregorianCalendarHoliday[$i];
 		//time
-		$time                         = $GregorianCalendarHolidayList["Time"];
-		$time                         = date('Y-',strtotime($oldDate)).str_replace(array('月','日'),array('-',''),$time);
+		$time = $GregorianCalendarHolidayList["Time"];
+		$time = date('Y-',strtotime($oldDate)).str_replace(array('月','日'),array('-',''),$time);
 		$time = strtotime($time);
 		//start end
 		$start= $time - abs($GregorianCalendarHolidayList["Start"]) * 86400;
@@ -65,11 +65,10 @@ foreach($dateArray as $key => $date)
 		}
 	}
 	//判断是否为特殊节假日
-	for($i = 0; $i < count($SpecialHoliday); $i++)
+	foreach($SpecialHoliday as $SpecialHolidaylist)
 	{
-		$SpecialHolidaylist = $SpecialHoliday[$i];
 		//time
-		$time               = $SpecialHolidaylist["Time"];
+		$time = $SpecialHolidaylist["Time"];
 		preg_match('/^(.*)月(.*)星期(.*)$/iUs',$time,$match);
 		if(!isset($match[2]))
 		{
@@ -103,26 +102,19 @@ foreach($dateArray as $key => $date)
 		}
 	}
 	//判断是否为阴历节假日
-	$lunar = new Lunar();
-	for($i = 0; $i < count($LunarCalendarHoliday); $i++)
+	foreach($LunarCalendarHoliday as $LunarCalendarHolidayList)
 	{
-		$LunarCalendarHolidayList = $LunarCalendarHoliday[$i];
 		//time
-		$time                     = $LunarCalendarHolidayList["Time"];
-		$time                     = explode('月',$time);
+		$time = $LunarCalendarHolidayList["Time"];
+		$time = explode('月',$time);
 		//农历转数字
-		$y = date('Y',strtotime($date));
-		//除夕是上一年的阴历日期
-		if($LunarCalendarHolidayList["Name"] == '除夕')
-		{
-			$y--;
-		}
-		$time                     = $lunar->convertLunarToSolar($y,LMonName($time[0]),LDayName($time[1]));
-		$time                     = implode('-',$time);
-		$time                     = strtotime($time);
+		$y    = date('Y',strtotime($date));
+		$LunarCalendarHolidayList["Name"] == '除夕' and $y--;//除夕是上一年的阴历日期
+		$time = $lunar->convertLunarToSolar($y,LMonName($time[0]),LDayName($time[1]));
+		$time = strtotime(implode('-',$time));
 		//start end
-		$start                    = $time - abs($LunarCalendarHolidayList["Start"]) * 86400;
-		$end                      = $time + abs($LunarCalendarHolidayList["End"]) * 86400;
+		$start= $time - abs($LunarCalendarHolidayList["Start"]) * 86400;
+		$end  = $time + abs($LunarCalendarHolidayList["End"]) * 86400;
 		//判断
 		if(strtotime($date) >= $start && strtotime($date) <= $end)
 		{

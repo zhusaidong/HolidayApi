@@ -13,10 +13,9 @@
 * 
 * @return int 第几天
 */
-function weekNumber($timestamp = '')
+function weekNumber($timestamp = 0)
 {
-	if($timestamp == '') $timestamp = time();
-	//return ($timestamp - strtotime(date("Y-m-01", $timestamp)))/86400 + 1;
+	$timestamp == 0 and $timestamp = time();
 	return date("z", $timestamp) - date("z", strtotime(date("Y-m-01", $timestamp))) + 1;
 }
 /**
@@ -29,9 +28,8 @@ function weekNumber($timestamp = '')
 */
 function GetDateByWeekNumberOfMonth($time,$day,$week)
 {
-	$date = $week - date('w',strtotime(date('Y-m-01',$time)));
-	$date = strtotime(date('Y-m-01',$time)) + 86400 * $date + 86400 * (7 * ($day - 1));
-	return $date;
+	$time = strtotime(date('Y-m-01',$time));
+	return $time + 86400 * ($week - date('w',$time)) + 86400 * (7 * ($day - 1));
 }
 /**
 * 获取时间在本月的第m个星期n
@@ -39,20 +37,16 @@ function GetDateByWeekNumberOfMonth($time,$day,$week)
 * 
 * @return array number=>第m个 week=>星期n
 */
-function GetWeekNumberByDate($time = '')
+function GetWeekNumberByDate($time = 0)
 {
-	if($time == '')
-	{
-		$time = time();
-	}
-	$return = array();
-	$week = date('w',strtotime(date('Y-m-01',$time)));
+	$time == 0 and $time = time();
+	
+	$return = [];
 	$day = date('d',$time) - 1;
-	$maxDay = date('t',$time);
-	$return['week'] = ($week + $day%7)%7;
-	$return['number'] = floor($day/7) + 1;
+	$return['week'] = (date('w',strtotime(date('Y-m-01',$time))) + $day % 7) % 7;
+	$return['number'] = floor($day / 7) + 1;
 	$return['chineseNumber'] = '第'.Number2ChineseNumber($return['number']).'个';
-	if($day + 1 + 7 >= $maxDay)
+	if($day + 1 + 7 >= date('t',$time))
 	{
 		$return['lastWeek'] = 1;
 	}
@@ -60,18 +54,14 @@ function GetWeekNumberByDate($time = '')
 }
 function Number2ChineseNumber($number = -1)
 {
-	if($number == -1 || $number > 10)
-	{
-		$number = 0;
-	}
+	($number == -1 || $number > 10) and $number = 0;
 	$chineseNumber = ["零","一","二","三","四","五","六","七","八","九","十"];
 	return $chineseNumber[$number];
 }
 function ChineseNumber2Number($number = '零')
 {
 	$chineseNumber = ["零","一","二","三","四","五","六","七","八","九","十"];
-	if(!in_array($number,$chineseNumber))
-	$number = '零';
+	!in_array($number,$chineseNumber) and $number = '零';
 	$chineseNumber = array_flip($chineseNumber);
 	return $chineseNumber[$number];
 }
@@ -84,9 +74,8 @@ function ChineseNumber2Number($number = '零')
 function WeekChinese2Number($week = '日')
 {
 	$weekChineses = ["日","一","二","三","四","五","六"];
-	if(!in_array($week,$weekChineses))
-	$week = '日';
 	$weekChineses = array_flip($weekChineses);
+	!in_array($week,$weekChineses) and $week = '日';
 	return $weekChineses[$week];
 }
 /**
@@ -100,18 +89,12 @@ function WeekChinese2Number($week = '日')
 function WeekNumber2Chinese($weekNumber = 0,$weekPrefix = "周")
 {
 	$weekChineses = ["日","一","二","三","四","五","六"];
-	if($weekNumber < 0 || $weekNumber > count($weekChineses))
-	{
-		$weekNumber = 0;
-	}
+	($weekNumber < 0 || $weekNumber > count($weekChineses)) and $weekNumber = 0;
 	return $weekPrefix.$weekChineses[$weekNumber];
 }
 function LMonName($month)
 {
-	if($month == "腊")
-	{
-		$month = "十二";
-	}
+	$month == "腊" and $month = "十二";
 	$Name = array(1=>"正","二","三","四","五","六","七","八","九","十","十一","十二");
 	$Name = array_flip($Name);
 	return $Name[$month];
