@@ -1,133 +1,136 @@
 <?php
 /**
-* 加入节假日时间段,节假日不放假
-* 	1.节假日当天前后几天能放假的都算节假日
-* 		如:10.1国庆节,但是放假7天,所以10.1-10.7都算节假日
-* 	2.有些节假日不放假,算工作日
-* 		如:2.2世界湿地日,但是不放假,所以算工作日
-* 修正返回格式
-* 节假日配置
+* TODO 节假日重叠问题
 * 
 * @author zhusaidong [zhusaidong@gmail.com]
-* @version 0.2.0.0
+* @version 0.3.0.0
 */
 date_default_timezone_set('Asia/Shanghai');
-require_once("./config.php");
-require_once("./function.php");
-require_once("./Lunar.class.php");
 
-!isset($_GET['date']) and exit(json_encode([
-	'code'=>-1,
-	'info'=>'输入日期',
-	'describe'=>[],
-],JSON_UNESCAPED_UNICODE));
+require_once('lib/Calendar.php');
+require_once('lib/Lunar.php');
+require_once("config.php");
+require_once("function.php");
+
+!isset($_GET['date']) and error(-1,'输入日期');
 
 $dates = $_GET['date'];
 $dates == "" and $dates = date('Y-m-d',time());
 
 $lunar  = new Lunar();
+$calendar  = new Calendar();
 
 $return = [];
 foreach(explode(',',$dates) as $key => $date)
 {
 	//不正确的日期格式
-	if(($time = strtotime($date)) === FALSE)
+	if(($timestamp = strtotime($date)) === FALSE)
 	{
-		exit('不正确的日期格式:'.$date);
+		error(-2,'不正确的日期格式:'.$date);
 	}
 	
-	$oldDate = $date;
-	$date    = date('Y-m-d',$time);
+	$date    = date('Y-m-d',$timestamp);
 	//返回的格式
 	$return[$key]['date'] = $date;
 	//工作日
 	$return[$key]['code'] = 0;
 	$return[$key]['info'] = '工作日';
-	$return[$key]['describe'] = ['Name'=>'周一至周五'];
+	$return[$key]['describe'] = ['name'=>'周一至周五'];
 	//判断是否为阳历节假日
-	foreach($GregorianCalendarHoliday as $GregorianCalendarHolidayList)
+	foreach($gregorian_calendar as $gregorian_calendar_list)
 	{
 		//time
-		$time = $GregorianCalendarHolidayList["Time"];
-		$time = date('Y-',strtotime($oldDate)).str_replace(array('月','日'),array('-',''),$time);
-		$time = strtotime($time);
+		$time = strtotime(date('Y',$timestamp).'-'.$gregorian_calendar_list["time"]);
 		//start end
-		$start= $time - abs($GregorianCalendarHolidayList["Start"]) * 86400;
-		$end  = $time + abs($GregorianCalendarHolidayList["End"]) * 86400;
+		$start= $time;
+		$end  = $time + $gregorian_calendar_list["days"] * 86400 - 1;
 		//判断
-		if(strtotime($date) >= $start && strtotime($date) <= $end)
+		if($timestamp >= $start && $timestamp <= $end)
 		{
 			//节假日
-			if($GregorianCalendarHolidayList["IsNotWork"])
+			if($gregorian_calendar_list["days"] > 0)
 			{
 				$return[$key]['code'] = 1;
 				$return[$key]['info'] = '节假日';
 			}
-			$return[$key]['describe'] = $GregorianCalendarHolidayList;
+			$return[$key]['describe'] = $gregorian_calendar_list;
 			break;
 		}
 	}
 	//判断是否为特殊节假日
-	foreach($SpecialHoliday as $SpecialHolidaylist)
+	foreach($special_gregorian_calendar as $special_gregorian_calendar_list)
 	{
 		//time
-		$time = $SpecialHolidaylist["Time"];
+		$time = $special_gregorian_calendar_list["time"];
 		preg_match('/^(.*)月(.*)星期(.*)$/iUs',$time,$match);
 		if(!isset($match[2]))
 		{
 			break;
 		}
-		if($match[2] == "最后一个")
+		$_day = $match[2];
+		$_day == "最后一个" and $_day = 7;
+		
+		do
 		{
-			$match[2] = 7;
-		}
-		$gdwnm = GetDateByWeekNumberOfMonth(strtotime($oldDate),$match[2],WeekChinese2Number($match[3]));
-		if(date('m',$gdwnm) != date('m',strtotime($date)))
-		{
-			$match[2] = 6;
-			$gdwnm = GetDateByWeekNumberOfMonth(strtotime($oldDate),$match[2],WeekChinese2Number($match[3]));
-		}
+			if($_day <= 0)
+			{
+				break 2;
+			}
+			$gdwnm = $calendar->getDateByWeekOfMonth($timestamp,$_day,$calendar->getWeekChinese2Number($match[3]));
+			$_day--;
+		}while(date('m',$gdwnm) == date('m',$timestamp));
+		
 		$time = $gdwnm;
 		//start end
-		$start= $time - abs($SpecialHolidaylist["Start"]) * 86400;
-		$end  = $time + abs($SpecialHolidaylist["End"]) * 86400;
+		$start= $time;
+		$end  = $time + $special_gregorian_calendar_list["days"] * 86400 - 1;
 		//判断
-		if(strtotime($date) >= $start && strtotime($date) <= $end)
+		if($timestamp >= $start && $timestamp <= $end)
 		{
 			//节假日
-			if($SpecialHolidaylist["IsNotWork"])
+			if($special_gregorian_calendar_list["days"] > 0)
 			{
 				$return[$key]['code'] = 1;
 				$return[$key]['info'] = '节假日';
 			}
-			$return[$key]['describe'] = $SpecialHolidaylist;
+			$return[$key]['describe'] = $special_gregorian_calendar_list;
 			break;
 		}
 	}
 	//判断是否为阴历节假日
-	foreach($LunarCalendarHoliday as $LunarCalendarHolidayList)
+	foreach($lunar_calendar as $lunar_calendar_list)
 	{
 		//time
-		$time = $LunarCalendarHolidayList["Time"];
+		$time = $lunar_calendar_list["time"];
 		$time = explode('月',$time);
 		//农历转数字
-		$y    = date('Y',strtotime($date));
-		$LunarCalendarHolidayList["Name"] == '除夕' and $y--;//除夕是上一年的阴历日期
-		$time = $lunar->convertLunarToSolar($y,LMonName($time[0]),LDayName($time[1]));
+		$year = date('Y',$timestamp);
+		$lunar_calendar_list["name"] == '除夕' and $year--;//除夕是上一年的阴历日期
+		$time = $lunar->convertLunarToSolar($year,$calendar->getLunarMonth2Number($time[0]),$calendar->getLunarDay2Number($time[1]));
 		$time = strtotime(implode('-',$time));
 		//start end
-		$start= $time - abs($LunarCalendarHolidayList["Start"]) * 86400;
-		$end  = $time + abs($LunarCalendarHolidayList["End"]) * 86400;
+		$start= $time;
+		$end  = $time + $lunar_calendar_list["days"] * 86400 - 1;
 		//判断
-		if(strtotime($date) >= $start && strtotime($date) <= $end)
+		if($timestamp >= $start && $timestamp <= $end)
 		{
 			//节假日
-			if($LunarCalendarHolidayList["IsNotWork"])
+			if($lunar_calendar_list["days"] > 0)
 			{
 				$return[$key]['code'] = 1;
 				$return[$key]['info'] = '节假日';
 			}
-			$return[$key]['describe'] = $LunarCalendarHolidayList;
+			if(isset($return[$key]['describe']['time']))
+			{
+				$_describe = []; 
+				$_describe[] = $return[$key]['describe'];
+				$_describe[] = $lunar_calendar_list;
+				$return[$key]['describe'] = $_describe;
+			}
+			else
+			{
+				$return[$key]['describe'] = $lunar_calendar_list;
+			}
 			break;
 		}
 	}
@@ -135,14 +138,14 @@ foreach(explode(',',$dates) as $key => $date)
 	if($return[$key]['code'] == 0)
 	{
 		//星期
-		$w = date('w',strtotime($date));
+		$w = date('w',$timestamp);
 		if($w == 0 || $w == 6)
 		{
 			//双休日
 			$return[$key]['code'] = 2;
 			$return[$key]['info'] = '双休日';
-			$return[$key]['describe'] = ['Name'=>'周六周日'];
+			$return[$key]['describe'] = ['name'=>'周六周日'];
 		}
 	}
 }
-echo json_encode($return,JSON_UNESCAPED_UNICODE);
+output($return);
