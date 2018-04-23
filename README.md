@@ -1,12 +1,9 @@
 # HolidayApi
 节假日api
 
-
-> 运行index.php
-
 * demo
 
-<a target="_blank" href="http://holiday.zhusaidong.cn/">DEMO</a>
+[demo](http://holiday.zhusaidong.cn/)
 
 * 返回json
 
@@ -18,12 +15,8 @@
     "info":"节假日",
     "describe":
     {
-      "Time":"10月1日",
-      "Name":"国庆节",
-      "EnglishName":"National Day",
-      "IsNotWork":1,
-      "Start":0,
-      "End":7
+      "time":"10-1",
+      "name":"国庆节",
     }
   }
 ]
@@ -40,24 +33,17 @@ code = 2
   双休日:周六周日
 ```
 
-* 功能
-
-```
- 加入节假日时间段,节假日不放假
- 	1.节假日当天前后几天能放假的都算节假日
- 		如:10.1国庆节,但是放假7天,所以10.1-10.7都算节假日
- 	2.有些节日不放假,算工作日
- 		如:2.2世界湿地日,但是不放假,所以算工作日
-```
-
 * TODO
 
 ```
-节假日叠加问题
-  因为国庆节和中秋节重叠，使得2017.10.8也属于节假日
+1. 节假日叠加问题
+	 因为国庆节和中秋节重叠，使得2017.10.8也属于节假日
+2. 调休问题
+3. 区分节假日和双休日
+	 如，国庆7天，实际上是节假日5天，双休日2天
 ```
 
-* V3.0
+* V3.0 CHANGELOG
 
 > 删除配置的字段 `EnglishName`, `Start`
 
