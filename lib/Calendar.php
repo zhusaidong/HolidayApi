@@ -8,6 +8,7 @@ class Calendar
 {
 	private $chineseNumber 	= ["零","一","二","三","四","五","六","七","八","九","十"];
 	private $weekChineses 	= ["日","一","二","三","四","五","六"];
+	public $weeks 			= ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 	private $lunarMonth 	= array(1=>"正","二","三","四","五","六","七","八","九","十","十一","十二");
 	private $lunarDay 		= array(1=>
 		"初一","初二","初三","初四","初五","初六","初七","初八","初九","初十",

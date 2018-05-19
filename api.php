@@ -35,7 +35,7 @@ foreach(explode(',',$dates) as $key => $date)
 	//工作日
 	$return[$key]['code'] = 0;
 	$return[$key]['info'] = '工作日';
-	$return[$key]['describe'] = ['name'=>'周一至周五'];
+	
 	//判断是否为阳历节假日
 	foreach($gregorian_calendar as $gregorian_calendar_list)
 	{
@@ -57,33 +57,31 @@ foreach(explode(',',$dates) as $key => $date)
 			break;
 		}
 	}
+	
 	//判断是否为特殊节假日
 	foreach($special_gregorian_calendar as $special_gregorian_calendar_list)
 	{
 		//time
-		$time = $special_gregorian_calendar_list["time"];
-		preg_match('/^(.*)月(.*)星期(.*)$/iUs',$time,$match);
+		preg_match('/^(.*)月(.*)星期(.*)$/iUs',$special_gregorian_calendar_list["time"],$match);
 		if(!isset($match[2]))
 		{
 			break;
 		}
-		$_day = $match[2];
-		$_day == "最后一个" and $_day = 7;
-		
-		do
+		if(strpos($match[2],'最后一个') !== FALSE)
 		{
-			if($_day <= 0)
-			{
-				break 2;
-			}
-			$gdwnm = $calendar->getDateByWeekOfMonth($timestamp,$_day,$calendar->getWeekChinese2Number($match[3]));
-			$_day--;
-		}while(date('m',$gdwnm) == date('m',$timestamp));
+			$_day_number = 'last';
+		}
+		else
+		{
+			$_day_number = $calendar->getChineseNumber2Number(str_replace(['第','个'],'',$match[2]));
+		}
+		$_week = $calendar->weeks[$calendar->getWeekChinese2Number($match[3])];
 		
-		$time = $gdwnm;
+		$time = strtotime($_day_number.' '.$_week,mktime(0,0,0,$match[1],1,date('Y',$timestamp)));
+		
 		//start end
 		$start= $time;
-		$end  = $time + $special_gregorian_calendar_list["days"] * 86400 - 1;
+		$end  = $time + ($special_gregorian_calendar_list["days"] + 1) * 86400 - 1;
 		//判断
 		if($timestamp >= $start && $timestamp <= $end)
 		{
@@ -97,6 +95,7 @@ foreach(explode(',',$dates) as $key => $date)
 			break;
 		}
 	}
+	
 	//判断是否为阴历节假日
 	foreach($lunar_calendar as $lunar_calendar_list)
 	{
@@ -134,6 +133,7 @@ foreach(explode(',',$dates) as $key => $date)
 			break;
 		}
 	}
+	
 	//不是节假日,则判断是否为非工作日(周六周日)
 	if($return[$key]['code'] == 0)
 	{
@@ -144,7 +144,11 @@ foreach(explode(',',$dates) as $key => $date)
 			//双休日
 			$return[$key]['code'] = 2;
 			$return[$key]['info'] = '双休日';
-			$return[$key]['describe'] = ['name'=>'周六周日'];
+			!isset($return[$key]['describe']) and $return[$key]['describe'] = ['name'=>'周六周日'];
+		}
+		else
+		{
+			!isset($return[$key]['describe']) and $return[$key]['describe'] = ['name'=>'周一至周五'];
 		}
 	}
 }
