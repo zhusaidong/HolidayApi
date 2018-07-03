@@ -8,17 +8,17 @@
 date_default_timezone_set('Asia/Shanghai');
 
 require_once('lib/Calendar.php');
-require_once('lib/Lunar.php');
 require_once("config.php");
 require_once("function.php");
+require('./vendor/autoload.php');
 
 !isset($_GET['date']) and error(-1,'输入日期');
 
 $dates = $_GET['date'];
 $dates == "" and $dates = date('Y-m-d',time());
 
-$lunar  = new Lunar();
 $calendar  = new Calendar();
+$lunar = new \ChineseLunar\Lunar();
 
 $return = [];
 foreach(explode(',',$dates) as $key => $date)
@@ -105,7 +105,7 @@ foreach(explode(',',$dates) as $key => $date)
 		//农历转数字
 		$year = date('Y',$timestamp);
 		$lunar_calendar_list["name"] == '除夕' and $year--;//除夕是上一年的阴历日期
-		$time = $lunar->convertLunarToSolar($year,$calendar->getLunarMonth2Number($time[0]),$calendar->getLunarDay2Number($time[1]));
+		$time = $lunar->toSolarDate($year,$time[0].'月',$time[1]);
 		$time = strtotime(implode('-',$time));
 		//start end
 		$start= $time;
@@ -129,6 +129,40 @@ foreach(explode(',',$dates) as $key => $date)
 			else
 			{
 				$return[$key]['describe'] = $lunar_calendar_list;
+			}
+			break;
+		}
+	}
+	
+	//节气节日
+	foreach($solarterms_calendar as $solarterms)
+	{
+		$time = $solarterms["time"];
+		$year = date('Y',$timestamp);
+		$time = $lunar->getSolarTerms($year,$time);
+		$time = strtotime($time);
+		//start end
+		$start= $time;
+		$end  = $time + $solarterms["days"] * 86400 - 1;
+		//判断
+		if($timestamp >= $start && $timestamp <= $end)
+		{
+			//节假日
+			if($solarterms["days"] > 0)
+			{
+				$return[$key]['code'] = 1;
+				$return[$key]['info'] = '节假日';
+			}
+			if(isset($return[$key]['describe']['time']))
+			{
+				$_describe = []; 
+				$_describe[] = $return[$key]['describe'];
+				$_describe[] = $solarterms;
+				$return[$key]['describe'] = $_describe;
+			}
+			else
+			{
+				$return[$key]['describe'] = $solarterms;
 			}
 			break;
 		}

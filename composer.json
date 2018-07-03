@@ -1,0 +1,5 @@
+{
+    "require": {
+        "zhusaidong/php-chinese-lunar": "dev-master"
+    }
+}

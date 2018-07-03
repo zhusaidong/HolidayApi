@@ -1,0 +1,59 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "06acc0ec650f3012eeb6f169201e4f5a",
+    "content-hash": "9409065e21131a0d2c98167d412ce7ff",
+    "packages": [
+        {
+            "name": "zhusaidong/php-chinese-lunar",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zhusaidong/php-chinese-lunar.git",
+                "reference": "c6867a8562e8f5a3b3b7f582ae5878cb669b7717"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zhusaidong/php-chinese-lunar/zipball/c6867a8562e8f5a3b3b7f582ae5878cb669b7717",
+                "reference": "c6867a8562e8f5a3b3b7f582ae5878cb669b7717",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ChineseLunar\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "zhusaidong",
+                    "email": "zhusaidong@gmail.com"
+                }
+            ],
+            "time": "2018-07-03 03:30:46"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "zhusaidong/php-chinese-lunar": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}
