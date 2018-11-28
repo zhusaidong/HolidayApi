@@ -45,7 +45,7 @@ foreach(explode(',',$dates) as $key => $date)
 		$start= $time;
 		$end  = $time + $gregorian_calendar_list["days"] * 86400 - 1;
 		//判断
-		if($timestamp >= $start && $timestamp <= $end)
+		if(date('Y',$timestamp) >= $gregorian_calendar_list['start_year'] && $timestamp >= $start && $timestamp <= $end)
 		{
 			//节假日
 			if($gregorian_calendar_list["days"] > 0)

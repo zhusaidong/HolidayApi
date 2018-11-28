@@ -4,7 +4,8 @@
 * 	array(
 * 		time	=>时间,
 * 		name	=>名称,
-* 		days	=>放假天数
+* 		days	=>放假天数,
+		start_year=>起始年,
 * 	)
 *
 * @author zhusaidong [zhusaidong@gmail.com]
@@ -17,16 +18,20 @@ $gregorian_calendar = array(
 		'time'=> '1-1',
 		'name'=> '元旦',
 		'days'=> 1,
+		'start_year'=>1949,
 	),
+	//根据百度百科资料，国际劳动节起始于1890年，而中国劳动节起始于1949年
 	array (
 		'time'=> '5-1',
-		'name'=> '国际劳动节',
+		'name'=> '劳动节',
 		'days'=> 1,
+		'start_year'=>1949,
 	),
 	array (
 		'time'=> '10-1',
 		'name'=> '国庆节',
 		'days'=> 5,
+		'start_year'=>1949,
 	),
 );
 
