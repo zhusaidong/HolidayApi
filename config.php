@@ -2,10 +2,10 @@
 /**
 * 节假日配置
 * 	array(
-* 		time	=>时间,
-* 		name	=>名称,
-* 		days	=>放假天数,
-		start_year=>起始年,
+* 		'time'		=>'时间',
+* 		'name'		=>'名称',
+* 		'days'		=>'放假天数',
+		'start_year'=>'起始年'
 * 	)
 *
 * @author zhusaidong [zhusaidong@gmail.com]
@@ -30,7 +30,7 @@ $gregorian_calendar = array(
 	array (
 		'time'=> '10-1',
 		'name'=> '国庆节',
-		'days'=> 5,
+		'days'=> 7,
 		'start_year'=>1949,
 	),
 );

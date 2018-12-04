@@ -107,7 +107,7 @@ substr($url,-1,1) != '/' and $url = dirname($url).'/';
 						success:function(data)
 						{
 							data = eval(data);
-							var text = '你选的日期是：' + data[0].date + ',' + data[0].info + '(' + data[0].describe.Name + ')';
+							var text = '你选的日期是：' + data[0].date + ',' + data[0].info + '(' + data[0].name + ')';
 							$('.HolidayApi-DEMO-info').text(text);
 						}
 					});
