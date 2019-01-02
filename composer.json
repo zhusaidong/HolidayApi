@@ -1,5 +1,7 @@
 {
     "require": {
-        "zhusaidong/php-chinese-lunar": "dev-master"
+        "zhusaidong/php-chinese-lunar": "dev-master",
+      "ext-json": "*",
+      "ext-mbstring": "*"
     }
 }

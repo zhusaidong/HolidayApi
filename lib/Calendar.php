@@ -68,7 +68,7 @@ class Calendar
 	* 阿拉伯数字转中文数字
 	* @param int $number
 	* 
-	* @return
+	* @return mixed
 	*/
 	public function getNumber2ChineseNumber($number = - 1)
 	{
@@ -80,7 +80,7 @@ class Calendar
 	* 中文数字转阿拉伯数字
 	* @param string $number
 	* 
-	* @return
+	* @return mixed
 	*/
 	public function getChineseNumber2Number($number = '零')
 	{
@@ -120,7 +120,7 @@ class Calendar
 	* 农历月份转数字月份
 	* @param string $month 农历月份
 	* 
-	* @return
+	* @return mixed
 	*/
 	public function getLunarMonth2Number($month)
 	{
@@ -133,7 +133,7 @@ class Calendar
 	* 农历日期转数字日期
 	* @param string $day 农历日期
 	* 
-	* @return
+	* @return mixed
 	*/
 	public function getLunarDay2Number($day)
 	{
