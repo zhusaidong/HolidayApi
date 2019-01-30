@@ -4,7 +4,7 @@
 
 ## demo
 
-[demo](http://holiday.zhusaidong.cn/)
+[demo](http://holiday.zhusaidong.cn/v3/)
 
 ## Usage
 
