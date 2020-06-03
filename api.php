@@ -1,9 +1,10 @@
 <?php
 /**
-* api
-* @author zhusaidong [zhusaidong@gmail.com]
-* @version 3.0
-*/
+ * api
+ *
+ * @author  zhusaidong [zhusaidong@gmail.com]
+ * @version 3.0
+ */
 date_default_timezone_set('Asia/Shanghai');
 
 require("function.php");
@@ -12,13 +13,13 @@ require('lib/YearHoliday.php');
 require('vendor/autoload.php');
 
 //输入
-switch(TRUE)
+switch(true)
 {
 	case !isset($_GET['date']):
-		error(-1,'输入日期');
+		error(-1, '输入日期');
 		break;
 	case empty($_GET['date']):
-		$dates = date('Y-m-d',time());
+		$dates = date('Y-m-d', time());
 		break;
 	default:
 		$dates = $_GET['date'];
@@ -28,25 +29,25 @@ switch(TRUE)
 $yearHoliday = new YearHoliday();
 
 $infoConf = [
-	0=>'工作日',
-	1=>'节假日',
-	2=>'双休日',
+	0 => '工作日',
+	1 => '节假日',
+	2 => '双休日',
 ];
 
 $return = [];
-foreach(explode(',',$dates) as $date)
+foreach(explode(',', $dates) as $date)
 {
 	//不正确的日期格式
-	if(($timestamp = strtotime($date)) === FALSE)
+	if(($timestamp = strtotime($date)) === false)
 	{
-		error(-2,'不正确的日期格式:'.$date);
+		error(-2, '不正确的日期格式:' . $date);
 	}
 	
-	$return_date = date('Y-m-d',$timestamp);
+	$return_date = date('Y-m-d', $timestamp);
 	//工作日
 	$return_code = 0;
 	
-	$holidays = $yearHoliday->get(date('Y',$timestamp));
+	$holidays = $yearHoliday->get(date('Y', $timestamp));
 	
 	$_holidays = [];
 	foreach($holidays as $holiday)
@@ -69,7 +70,7 @@ foreach(explode(',',$dates) as $date)
 	if($return_code == 0)
 	{
 		//星期
-		$w = date('w',$timestamp);
+		$w = date('w', $timestamp);
 		if($w == 0 || $w == 6)
 		{
 			//双休日
@@ -87,10 +88,10 @@ foreach(explode(',',$dates) as $date)
 	}
 	
 	$return[] = [
-		'date'=>$return_date,
-		'code'=>$return_code,
-		'info'=>$infoConf[$return_code],
-		'name'=>$name,
+		'date' => $return_date,
+		'code' => $return_code,
+		'info' => $infoConf[$return_code],
+		'name' => $name,
 	];
 }
 output($return);
