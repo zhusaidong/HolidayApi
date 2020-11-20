@@ -6,7 +6,7 @@
 
 * demo
 
-<a target="_blank" href="http://holiday.zhusaidong.cn/">DEMO</a>
+~~<a target="_blank" href="http://holiday.zhusaidong.cn/">DEMO</a>~~
 
 服务器有点小贵，不再续费了。有需要可以自行搭建。
 
